@@ -44,3 +44,5 @@ nav.main a{text-decoration:none}nav.main a:hover{text-decoration:underline}
 footer{border-top:1px solid var(--line);padding:32px 0;font-size:14px;margin-top:24px}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
 @media(max-width:800px){.rooms{grid-template-columns:repeat(2,1fr)}.room:first-child{grid-column:span 2}nav.main{display:none}.pdp{grid-template-columns:1fr}}
+.doc{max-width:720px;padding:32px 0 56px}.doc h1{font-size:clamp(30px,5vw,44px);margin:0 0 12px}.doc h2{font-size:22px;margin:32px 0 8px}.doc p,.doc li{max-width:68ch}.doc a{color:var(--accent)}
+.foot a{margin-right:16px}

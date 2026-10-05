@@ -7,5 +7,6 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "organova-store", "database_id": "968ce879-d9c4-4109-9f5f-ec824fb7ecc1" }
   ],
+  "kv_namespaces": [{ "binding": "IMAGES", "id": "a46a16561f9243a99ec79940cbd29fe7" }],
   "vars": { "PAYPAL_ENV": "sandbox", "SHIPPING_PENCE": "0" }
 }

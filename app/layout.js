@@ -16,7 +16,9 @@ export default function Root({ children }) {
         <CartLink />
       </div></header>
       <main className="wrap">{children}</main>
-      <footer><div className="wrap"><Logo size={22} /><span>© Organova · organova.co.uk</span></div></footer>
+      <footer><div className="wrap"><Logo size={22} />
+        <span className="foot"><a href="/pages/contact">Contact</a><a href="/policies/shipping-policy">Shipping</a><a href="/policies/refund-policy">Returns &amp; refunds</a><a href="/policies/privacy-policy">Privacy</a><a href="/policies/terms-of-service">Terms</a><a href="/policies/legal-notice">Legal notice</a></span>
+        <span>© Organova · 211E Lower Clapton Road, London E5 8EG</span></div></footer>
     </body></html>
   );
 }
