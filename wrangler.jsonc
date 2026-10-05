@@ -1,0 +1,11 @@
+{
+  "name": "organova-store",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-05-05",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "organova-store", "database_id": "968ce879-d9c4-4109-9f5f-ec824fb7ecc1" }
+  ],
+  "vars": { "PAYPAL_ENV": "sandbox", "SHIPPING_PENCE": "0" }
+}

@@ -1,0 +1,1 @@
+export default function Thanks() { return <><h1>Thank you for your order</h1><p>PayPal will email your receipt. We will send tracking details once your order ships.</p><p><a href="/">Keep shopping</a></p></>; }
