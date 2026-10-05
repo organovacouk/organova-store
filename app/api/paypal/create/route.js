@@ -9,6 +9,12 @@ export async function POST(req) {
     const qty = Math.min(Math.max(parseInt(it.qty) || 0, 1), 20);
     const p = await db().prepare("SELECT handle,title,price_pence FROM products WHERE handle=? AND status='active'").bind(it.handle).first();
     if (!p) return Response.json({ error: "Product unavailable" }, { status: 400 });
+    const nv = await db().prepare("SELECT COUNT(*) n FROM variants WHERE handle=?").bind(it.handle).first();
+    if (nv.n > 0) {
+      const v = await db().prepare("SELECT id,title,price_pence FROM variants WHERE id=? AND handle=?").bind(parseInt(it.variantId) || 0, it.handle).first();
+      if (!v) return Response.json({ error: "Please choose an option" }, { status: 400 });
+      p.price_pence = v.price_pence; p.title = p.title + " (" + v.title + ")";
+    }
     lines.push({ ...p, qty });
   }
   const sub = lines.reduce((s, l) => s + l.price_pence * l.qty, 0);

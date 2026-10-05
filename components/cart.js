@@ -11,13 +11,27 @@ export function CartLink() {
   const n = useCart().reduce((s, i) => s + i.qty, 0);
   return <a href="/cart">Basket ({n})</a>;
 }
-export function AddToCart({ item }) {
+const money = (p) => "£" + (p / 100).toFixed(2);
+export function Buy({ product, variants }) {
+  const [vid, setVid] = useState(variants[0]?.id);
   const [done, setDone] = useState(false);
+  const v = variants.find((x) => x.id === +vid);
+  const price = v ? v.price_pence : product.price;
+  const was = v ? v.compare_at_pence : product.compare;
+  const add = () => {
+    const key = product.handle + "|" + (v?.id || 0);
+    const c = read(); const f = c.find((i) => i.key === key);
+    f ? f.qty++ : c.push({ key, handle: product.handle, variantId: v?.id || null, title: product.title, variant: v?.title || "", price, image: product.image, qty: 1 });
+    write(c); setDone(true); setTimeout(() => setDone(false), 1500);
+  };
   return (
-    <button className="btn" onClick={() => {
-      const c = read(); const f = c.find((i) => i.handle === item.handle);
-      f ? f.qty++ : c.push({ ...item, qty: 1 });
-      write(c); setDone(true); setTimeout(() => setDone(false), 1500);
-    }}>{done ? "Added to basket" : "Add to basket"}</button>
+    <>
+      <p><span className="price" style={{ fontSize: 24 }}>{money(price)}</span>{was > price && <><span className="was">{money(was)}</span><span className="save">Save {money(was - price)}</span></>}</p>
+      {variants.length > 0 && (<><label className="opt" htmlFor="v">Choose an option</label>
+        <select id="v" value={vid} onChange={(e) => setVid(e.target.value)}>
+          {variants.map((x) => <option key={x.id} value={x.id}>{x.title} — {money(x.price_pence)}</option>)}
+        </select></>)}
+      <button className="btn" onClick={add}>{done ? "Added to basket" : "Add to basket"}</button>
+    </>
   );
 }

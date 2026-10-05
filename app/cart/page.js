@@ -19,7 +19,7 @@ export default function Cart() {
         box.current.dataset.ready = "1";
         window.paypal.Buttons({
           createOrder: async () => {
-            const r = await fetch("/api/paypal/create", { method: "POST", body: JSON.stringify({ items: ref.current.map((i) => ({ handle: i.handle, qty: i.qty })) }) });
+            const r = await fetch("/api/paypal/create", { method: "POST", body: JSON.stringify({ items: ref.current.map((i) => ({ handle: i.handle, variantId: i.variantId, qty: i.qty })) }) });
             const j = await r.json(); if (!j.id) throw new Error(j.error || "Could not start checkout"); return j.id;
           },
           onApprove: async (d) => {
@@ -34,16 +34,16 @@ export default function Cart() {
     })();
   }, [cart.length]);
   if (!cart.length) return <><h1>Your basket is empty</h1><p><a href="/">Browse products</a></p></>;
-  const setQty = (h, d) => write(cart.map((i) => (i.handle === h ? { ...i, qty: i.qty + d } : i)).filter((i) => i.qty > 0));
+  const setQty = (h, d) => write(cart.map((i) => (i.key === h ? { ...i, qty: i.qty + d } : i)).filter((i) => i.qty > 0));
   return (
     <>
       <h1>Your basket</h1>
       {cart.map((i) => (
-        <div className="row" key={i.handle}>
+        <div className="row" key={i.key}>
           <img src={i.image} alt="" />
-          <div className="grow"><a href={"/products/" + i.handle}>{i.title}</a><br />{gbp(i.price)}</div>
-          <button onClick={() => setQty(i.handle, -1)} aria-label="Remove one">−</button> {i.qty}
-          <button onClick={() => setQty(i.handle, 1)} aria-label="Add one">+</button>
+          <div className="grow"><a href={"/products/" + i.handle}>{i.title}</a>{i.variant && <><br /><small>{i.variant}</small></>}<br />{gbp(i.price)}</div>
+          <button onClick={() => setQty(i.key, -1)} aria-label="Remove one">−</button> {i.qty}
+          <button onClick={() => setQty(i.key, 1)} aria-label="Add one">+</button>
         </div>
       ))}
       <p><strong>Subtotal {gbp(total)}</strong> — delivery is added at checkout.</p>
