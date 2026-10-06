@@ -59,5 +59,5 @@ If we transfer your personal information out of the European Economic Area or th
 ## Changes to This Privacy Policy
 We may update this Privacy Policy from time to time, including to reflect changes to our practices or for other operational, legal, or regulatory reasons. We will post the revised Privacy Policy on this website, update the "Last updated" date and provide notice as required by applicable law.
 ## Contact
-Should you have any questions about our privacy practices or this Privacy Policy, or if you would like to exercise any of the rights available to you, please call +44 7405 887737 or email us at <contact@organova.co.uk> or contact us at 211 Lower Clapton Road, Hackney, London E5 8EG, United Kingdom. For the purpose of applicable data protection laws, we are the data controller of your personal information.
+Should you have any questions about our privacy practices or this Privacy Policy, or if you would like to exercise any of the rights available to you, please call +44 7405 887737 or email us at <contact@organova.co.uk> or contact us at Dragonfly Heights, 3 Teal Road, Ilford IG3 8FY, United Kingdom. For the purpose of applicable data protection laws, we are the data controller of your personal information.
 `;
