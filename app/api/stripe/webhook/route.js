@@ -1,6 +1,7 @@
 import { db, env } from "@/lib/db";
 import { stripe, verifySignature } from "@/lib/stripe";
 import { deliverable } from "@/lib/geo";
+import { notify } from "@/lib/notify";
 export async function POST(req) {
   const body = await req.text();
   if (!(await verifySignature(body, req.headers.get("stripe-signature"), env().STRIPE_WEBHOOK_SECRET))) return new Response("bad signature", { status: 400 });
@@ -17,5 +18,6 @@ export async function POST(req) {
   }
   await db().prepare("UPDATE orders SET status='paid',email=?,name=?,shipping_json=?,total_pence=?,paid_at=datetime('now') WHERE paypal_order_id=? AND status<>'paid'")
     .bind(s.customer_details?.email || null, name, JSON.stringify(a), s.amount_total, s.id).run();
+  await notify("New Organova order (card) £" + (s.amount_total / 100).toFixed(2), "From " + (s.customer_details?.email || "?") + ". See /admin for details.");
   return Response.json({ received: true });
 }

@@ -1,0 +1,1 @@
+export default function NotFound() { return <section className="doc"><h1>We could not find that page</h1><p>It may have moved. Try searching, or browse by room.</p><p><a className="btn" href="/shop">Shop all products</a></p></section>; }

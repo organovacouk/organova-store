@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { paypal } from "@/lib/paypal";
 import { hasPaidOrder } from "@/lib/order";
 import { deliverable } from "@/lib/geo";
+import { notify } from "@/lib/notify";
 const fail = (orderID, status, error) => db().prepare("UPDATE orders SET status=? WHERE paypal_order_id=?").bind(status, orderID).run().then(() => Response.json({ ok: false, error }, { status: 422 }));
 export async function POST(req) {
   const { orderID } = await req.json();
@@ -21,5 +22,6 @@ export async function POST(req) {
   const ship = data.purchase_units[0].shipping || {};
   await db().prepare("UPDATE orders SET status='paid',email=?,name=?,shipping_json=?,paid_at=datetime('now') WHERE paypal_order_id=?")
     .bind(data.payer?.email_address || null, ship.name?.full_name || null, JSON.stringify(ship.address || {}), orderID).run();
+  await notify("New Organova order (PayPal) £" + (row.total_pence / 100).toFixed(2), "Order #" + row.id + " from " + (data.payer?.email_address || "?") + ". See /admin for details.");
   return Response.json({ ok: true });
 }

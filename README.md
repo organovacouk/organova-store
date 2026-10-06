@@ -11,3 +11,4 @@ Secrets (Settings -> Variables and Secrets):
 - PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET
 - STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET (webhook URL: /api/stripe/webhook, event: checkout.session.completed)
 - RESEND_API_KEY (optional, emails contact-form messages to support@organova.co.uk; CONTACT_FROM / CONTACT_TO can override)
+Also set ADMIN_PASSWORD (secret) to use /admin (orders, messages, review approval).

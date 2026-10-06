@@ -2,10 +2,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useCart, write } from "@/components/cart";
 import { gbp } from "@/lib/db-format";
+import QuickAdd from "@/components/QuickAdd";
 export default function Cart() {
   const cart = useCart();
   const [err, setErr] = useState(""), [cfg, setCfg] = useState(null), [codeIn, setCodeIn] = useState(""), [disc, setDisc] = useState(null), [email, setEmail] = useState(""), [busy, setBusy] = useState(false);
   const box = useRef(null);
+  const [rel, setRel] = useState([]);
+  const hkey = cart.map((i) => i.handle).join(",");
+  useEffect(() => { if (hkey) fetch("/api/related?h=" + encodeURIComponent(hkey)).then((r) => r.json()).then(setRel).catch(() => {}); }, [hkey]);
   const st = useRef({}); st.current = { cart, disc, email };
   const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const off = disc ? Math.round((sub * disc.percent) / 100) : 0;
@@ -64,6 +68,8 @@ export default function Cart() {
         {cfg?.stripe && <button className="btn alt" onClick={card} disabled={busy}>{busy ? "Please wait…" : "Pay by card (Stripe)"}</button>}
         {cfg && !cfg.paypal && !cfg.stripe && <p>Checkout is not configured yet.</p>}
       </div>
+      {rel.length > 0 && <section className="upsell"><h2>You may also like</h2><div className="grid sm4">{rel.map((p) => (
+        <div className="card" key={p.handle}><a href={"/products/" + p.handle}><div className="ph"><img src={p.image} alt={p.title} loading="lazy" /></div></a><div className="meta"><h3>{p.title}</h3><p><span className="price">{gbp(p.price)}</span>{p.compare > p.price && <span className="was">{gbp(p.compare)}</span>}</p><QuickAdd item={{ handle: p.handle, title: p.title, price: p.price, image: p.image }} /></div></div>))}</div></section>}
     </>
   );
 }
