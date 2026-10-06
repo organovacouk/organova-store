@@ -3,6 +3,7 @@ import { paypal } from "@/lib/paypal";
 import { hasPaidOrder } from "@/lib/order";
 import { deliverable } from "@/lib/geo";
 import { notify } from "@/lib/notify";
+import { confirmationEmail } from "@/lib/emails";
 const fail = (orderID, status, error) => db().prepare("UPDATE orders SET status=? WHERE paypal_order_id=?").bind(status, orderID).run().then(() => Response.json({ ok: false, error }, { status: 422 }));
 export async function POST(req) {
   const { orderID } = await req.json();
@@ -21,7 +22,9 @@ export async function POST(req) {
   if (!ok || data.status !== "COMPLETED" || !cap || Math.round(parseFloat(cap.amount.value) * 100) !== row.total_pence) return fail(orderID, "failed", "Payment could not be completed. You have not been charged.");
   const ship = data.purchase_units[0].shipping || {};
   await db().prepare("UPDATE orders SET status='paid',email=?,name=?,shipping_json=?,paid_at=datetime('now') WHERE paypal_order_id=?")
-    .bind(data.payer?.email_address || null, ship.name?.full_name || null, JSON.stringify(ship.address || {}), orderID).run();
+    .bind(data.payer?.email_address || null, ship.name?.full_name || null, JSON.stringify({ ...(ship.address || {}), phone: data.payer?.phone?.phone_number?.national_number || null }), orderID).run();
+  const paid = await db().prepare("SELECT * FROM orders WHERE paypal_order_id=?").bind(orderID).first();
+  await confirmationEmail(paid);
   await notify("New Organova order (PayPal) £" + (row.total_pence / 100).toFixed(2), "Order #" + row.id + " from " + (data.payer?.email_address || "?") + ". See /admin for details.");
   return Response.json({ ok: true });
 }

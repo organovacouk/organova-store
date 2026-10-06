@@ -85,3 +85,6 @@ footer{border-top:1px solid var(--line);background:#fff;padding:48px 0 28px;marg
 .fine{font-size:13px;opacity:.65;border-top:1px solid var(--line);padding-top:18px;margin-top:32px}
 @media(max-width:900px){.hero,.split,.pdp,.band{grid-template-columns:1fr}.rooms{grid-template-columns:repeat(2,1fr)}.trust{grid-template-columns:1fr 1fr}.fg{grid-template-columns:1fr 1fr}.info{position:static}.search{display:none}.hd{justify-content:space-between}}
 @media(max-width:560px){.wrap{padding:0 16px}.trust{grid-template-columns:1fr}.fg{grid-template-columns:1fr}.band{padding:28px}}
+.ord{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px 24px;margin:16px 0}.ord h2{margin:0 0 4px;font-size:21px}.ord ul{padding-left:20px}
+.st{font:600 12.5px 'Figtree';padding:3px 10px;border-radius:999px;background:var(--soft);vertical-align:middle;margin-left:8px}.st.shipped,.st.delivered{background:#dfeedd}.st.cancelled{background:#f3dcd7}
+.acct{display:grid;place-items:center;width:44px;height:44px;border-radius:50%}.acct:hover{background:var(--soft)}
