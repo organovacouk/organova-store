@@ -1,5 +1,6 @@
 import "./globals.css";
 import Logo from "@/components/Logo";
+import Chrome from "@/components/Chrome";
 import Newsletter from "@/components/Newsletter";
 import { CartLink } from "@/components/cart";
 export const metadata = {
@@ -16,7 +17,7 @@ export default function Root({ children }) {
       <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet" />
     </head><body>
       <a className="skip" href="#main">Skip to content</a>
-      <div className="bar">20% off your first order with code <b>ORGANOVAFIRST</b> · Free UK delivery</div>
+      <Chrome top={<><div className="bar">20% off your first order with code <b>ORGANOVAFIRST</b> · Free UK delivery</div>
       <header><div className="wrap hd">
         <a href="/" aria-label="Organova home"><Logo height={60} /></a>
         <form action="/search" className="search" role="search"><input name="q" placeholder="Search storage, racks, shelves…" aria-label="Search" /><button aria-label="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button></form>
@@ -26,8 +27,7 @@ export default function Root({ children }) {
       <nav className="wrap rooms-nav" aria-label="Shop by room">
         <a href="/shop">Shop all</a>{nav.map(([l, t]) => <a key={t} href={"/shop?type=" + encodeURIComponent(t)}>{l}</a>)}<a href="/shop?sale=1" className="hot">Sale</a><a href="/blog">Journal</a>
       </nav></header>
-      <main id="main" className="wrap">{children}</main>
-      <footer>
+      </>} bottom={<footer>
         <div className="wrap">
           <div className="f-top">
             <div><h3>Join the Organova list</h3><p>Get 20% off your first order with code ORGANOVAFIRST, plus new arrivals and practical tips.</p></div>
@@ -50,7 +50,7 @@ export default function Root({ children }) {
             <span className="chips"><b>Secure checkout</b><i>PayPal</i><i>Visa</i><i>Mastercard</i><i>Apple Pay</i><i>Google Pay</i></span>
           </div>
         </div>
-      </footer>
+      </footer>}>{children}</Chrome>
     </body></html>
   );
 }
