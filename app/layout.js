@@ -30,7 +30,7 @@ export default function Root({ children }) {
       <footer>
         <div className="wrap">
           <div className="f-top">
-            <div><h3>Join the Organova list</h3><p>New arrivals, practical tips and 20% off your first order.</p></div>
+            <div><h3>Join the Organova list</h3><p>Get 20% off your first order with code ORGANOVAFIRST, plus new arrivals and practical tips.</p></div>
             <Newsletter />
           </div>
           <div className="fg">

@@ -4,7 +4,6 @@ import { SEL } from "@/lib/q";
 import Card from "@/components/Card";
 import Img from "@/components/Img";
 import BeforeAfter from "@/components/BeforeAfter";
-import Newsletter from "@/components/Newsletter";
 import Stars from "@/components/Stars";
 export const dynamic = "force-dynamic";
 const Icon = ({ d }) => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={d} /></svg>;
@@ -42,7 +41,6 @@ export default async function Home({ searchParams }) {
       {reviews.length > 0 && <section><div className="sh"><h2>What customers say</h2></div><div className="revs">{reviews.map((r) => <blockquote key={r.id}><Stars v={r.rating} /><p>{r.body}</p><footer>{r.name}{r.verified ? " · Verified purchase" : ""} · <a href={"/products/" + r.handle}>{r.ptitle}</a></footer></blockquote>)}</div></section>}
       <section><div className="sh"><h2>From the journal</h2><a href="/blog">All articles</a></div>
         <div className="posts">{posts.map((p) => <a key={p.slug} className="post" href={"/blog/" + p.slug}>{p.image_url ? <Img src={p.image_url} fallback={kitchenImg} alt="" /> : <div className="ph0" />}<h3>{p.title}</h3><p>{p.excerpt}</p></a>)}</div></section>
-      <section className="band"><div><h2>Get 20% off your first order</h2><p>Join our list for new arrivals and practical tips. Use code ORGANOVAFIRST at checkout.</p></div><Newsletter /></section>
     </>
   );
 }
