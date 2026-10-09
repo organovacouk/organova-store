@@ -24,6 +24,7 @@ export async function POST(req) {
   }
   if (act === "settings_save") {
     const p = pence(f.get("shipping")); if (Number.isFinite(p) && p >= 0 && p < 10000) await d.prepare("INSERT INTO settings (key,value) VALUES ('shipping_pence',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(String(p)).run();
+    await d.prepare("INSERT INTO settings (key,value) VALUES ('chat_enabled',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(f.get("chat") === "0" ? "0" : "1").run();
     return new Response(null, { status: 303, headers: { Location: new URL(req.url).origin + "/admin/settings?saved=1" } });
   }
   if (act === "fulfil") {

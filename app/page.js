@@ -5,6 +5,7 @@ import Card from "@/components/Card";
 import Img from "@/components/Img";
 import BeforeAfter from "@/components/BeforeAfter";
 import Stars from "@/components/Stars";
+import Recent from "@/components/Recent";
 export const dynamic = "force-dynamic";
 const Icon = ({ d }) => <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={d} /></svg>;
 export default async function Home({ searchParams }) {
@@ -37,6 +38,7 @@ export default async function Home({ searchParams }) {
       <section><div className="sh"><h2>Shop by room</h2><a href="/shop">View all</a></div>
         <div className="rooms">{rooms.map((r) => <a key={r.t} className="room" href={"/shop?type=" + encodeURIComponent(r.t)}><img src={r.img} alt="" loading="lazy" /><span>{r.t}<small>{r.n} products</small></span></a>)}</div></section>
       {sale.length > 0 && <section><div className="sh"><h2>On sale now</h2><a href="/shop?sale=1">View all</a></div><div className="rail">{sale.map((p) => <Card key={p.id} p={p} />)}</div></section>}
+      <Recent />
       <section className="split"><div><p className="eyebrow">See the difference</p><h2>Small changes. A better everyday.</h2><p>Drag the slider to see how a few smart pieces turn a cluttered kitchen into a calm one.</p><a className="btn" href="/shop?type=Kitchen">Shop the kitchen</a></div><BeforeAfter /></section>
       {reviews.length > 0 && <section><div className="sh"><h2>What customers say</h2></div><div className="revs">{reviews.map((r) => <blockquote key={r.id}><Stars v={r.rating} /><p>{r.body}</p><footer>{r.name}{r.verified ? " · Verified purchase" : ""} · <a href={"/products/" + r.handle}>{r.ptitle}</a></footer></blockquote>)}</div></section>}
       <section><div className="sh"><h2>From the journal</h2><a href="/blog">All articles</a></div>

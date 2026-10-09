@@ -7,6 +7,7 @@ import Bundle from "@/components/Bundle";
 import Card from "@/components/Card";
 import Stars from "@/components/Stars";
 import ReviewForm from "@/components/ReviewForm";
+import Recent from "@/components/Recent";
 export const dynamic = "force-dynamic";
 const get = (h) => db().prepare(SEL + " AND p.handle=?").bind(h).first();
 export async function generateMetadata({ params }) {
@@ -54,6 +55,7 @@ export default async function Product({ params }) {
         <details className="wr"><summary className="btn ghost">Write a review</summary><ReviewForm handle={p.handle} /></details>
       </section>
       {same.length > 0 && <section><div className="sh"><h2>More from {p.product_type}</h2><a href={"/shop?type=" + encodeURIComponent(p.product_type)}>View all</a></div><div className="rail">{same.map((x) => <Card key={x.id} p={x} />)}</div></section>}
+      <Recent current={p.handle} />
       <section><div className="sh"><h2>Shop by category</h2></div><div className="rooms sm">{rooms.map((r) => <a key={r.t} className="room" href={"/shop?type=" + encodeURIComponent(r.t)}><img src={r.img} alt="" loading="lazy" /><span>{r.t}</span></a>)}</div></section>
     </>
   );
