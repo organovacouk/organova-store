@@ -2,6 +2,8 @@ import "./globals.css";
 import Logo from "@/components/Logo";
 import Chrome from "@/components/Chrome";
 import SearchBox from "@/components/SearchBox";
+import RoomsNav from "@/components/RoomsNav";
+import { Suspense } from "react";
 import { WishLink } from "@/components/Wish";
 import Newsletter from "@/components/Newsletter";
 import { CartLink } from "@/components/cart";
@@ -11,7 +13,8 @@ export const metadata = {
   description: "Smart, practical home organisation for British homes. Kitchen, bathroom, bedroom and hallway storage with free UK delivery.",
   openGraph: { siteName: "Organova", type: "website", locale: "en_GB" },
 };
-const nav = [["Kitchen", "Kitchen"], ["Bathroom", "Bathroom"], ["Bedroom", "Bedroom & Wardrobe"], ["Hallway", "Hallway & Shoes"], ["Living room", "Living Room & General"]];
+const nav = [["Kitchen", "Kitchen"], ["Bathroom", "Bathroom"], ["Bedroom", "Bedroom & Wardrobe"], ["Hallway", "Hallway & Shoes"], ["Living room", "Living Room & General"], ["Garage & shelving", "Shelving & Garage"], ["Laundry", "Laundry"]];
+const navItems = [{ key: "all", label: "Shop all", href: "/shop" }, ...nav.map(([l, t]) => ({ key: "t:" + t, label: l, href: "/shop?type=" + encodeURIComponent(t) })), { key: "sale", label: "Sale", href: "/shop?sale=1", cls: "hot" }, { key: "journal", label: "Journal", href: "/blog" }];
 export default function Root({ children }) {
   return (
     <html lang="en-GB"><head>
@@ -27,9 +30,7 @@ export default function Root({ children }) {
         <WishLink />
         <CartLink />
       </div>
-      <nav className="wrap rooms-nav" aria-label="Shop by room">
-        <a href="/shop">Shop all</a>{nav.map(([l, t]) => <a key={t} href={"/shop?type=" + encodeURIComponent(t)}>{l}</a>)}<a href="/shop?sale=1" className="hot">Sale</a><a href="/blog">Journal</a>
-      </nav></header>
+      <Suspense fallback={<nav className="wrap rooms-nav" aria-label="Shop by room">{navItems.map((it) => <a key={it.key} href={it.href} className={it.cls || ""}>{it.label}</a>)}</nav>}><RoomsNav items={navItems} /></Suspense></header>
       </>} bottom={<footer>
         <div className="wrap">
           <div className="f-top">
