@@ -14,6 +14,7 @@ export default function Cart() {
   const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const off = disc ? Math.round((sub * disc.percent) / 100) : 0;
   const body = () => JSON.stringify({ items: st.current.cart.map((i) => ({ handle: i.handle, variantId: i.variantId, qty: i.qty })), code: st.current.disc?.code, email: st.current.email });
+  useEffect(() => { if (cart.length && !st.current.disc) fetch("/api/aff/ref").then((r) => r.json()).then((j) => { if (j.code && j.percent && !st.current.disc) { setCodeIn(j.code); apply(j.code); } }).catch(() => {}); }, [cart.length > 0]);
   useEffect(() => { fetch("/api/config").then((r) => r.json()).then(setCfg); }, []);
   useEffect(() => {
     if (!cfg?.paypal || !cart.length || box.current?.dataset.ready) return;
@@ -31,9 +32,10 @@ export default function Cart() {
     };
     document.body.appendChild(s);
   }, [cfg, cart.length]);
-  async function apply() {
+  async function apply(c) {
+    const codeVal = typeof c === "string" ? c : codeIn.trim();
     setErr("");
-    const r = await fetch("/api/discount", { method: "POST", body: JSON.stringify({ ...JSON.parse(body()), code: codeIn.trim() }) });
+    const r = await fetch("/api/discount", { method: "POST", body: JSON.stringify({ ...JSON.parse(body()), code: codeVal }) });
     const j = await r.json();
     if (r.ok) setDisc(j); else { setDisc(null); setErr(j.error); }
   }

@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { paypal } from "@/lib/paypal";
 import { priceCart, money } from "@/lib/order";
+import { refFromReq } from "@/lib/aff";
 export async function POST(req) {
   const { items, code } = await req.json();
   const r = await priceCart(items, code);
@@ -15,7 +16,7 @@ export async function POST(req) {
     application_context: { shipping_preference: "GET_FROM_FILE", brand_name: "Organova", user_action: "PAY_NOW" },
   });
   if (!ok) return Response.json({ error: "PayPal error" }, { status: 502 });
-  await db().prepare("INSERT INTO orders (paypal_order_id,provider,status,items_json,subtotal_pence,shipping_pence,total_pence,discount_pence,discount_code) VALUES (?,?,?,?,?,?,?,?,?)")
-    .bind(data.id, "paypal", "created", JSON.stringify(r.lines), r.sub, r.ship, r.total, r.discount, r.d?.code || null).run();
+  await db().prepare("INSERT INTO orders (paypal_order_id,provider,status,items_json,subtotal_pence,shipping_pence,total_pence,discount_pence,discount_code,aff_code) VALUES (?,?,?,?,?,?,?,?,?,?)")
+    .bind(data.id, "paypal", "created", JSON.stringify(r.lines), r.sub, r.ship, r.total, r.discount, r.d?.code || null, refFromReq(req)).run();
   return Response.json({ id: data.id });
 }

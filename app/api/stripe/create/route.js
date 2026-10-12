@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { priceCart, hasPaidOrder } from "@/lib/order";
+import { refFromReq } from "@/lib/aff";
 export async function POST(req) {
   const { items, code, email } = await req.json();
   const r = await priceCart(items, code);
@@ -20,7 +21,7 @@ export async function POST(req) {
   if (r.d) { const c = await stripe("/coupons", { percent_off: r.d.percent, duration: "once", max_redemptions: 1 }); if (!c.ok) return Response.json({ error: "Could not apply code" }, { status: 502 }); params.discounts = [{ coupon: c.data.id }]; }
   const { ok, data } = await stripe("/checkout/sessions", params);
   if (!ok) return Response.json({ error: "Card checkout is unavailable right now" }, { status: 502 });
-  await db().prepare("INSERT INTO orders (paypal_order_id,provider,status,email,items_json,subtotal_pence,shipping_pence,total_pence,discount_pence,discount_code) VALUES (?,?,?,?,?,?,?,?,?,?)")
-    .bind(data.id, "stripe", "created", email || null, JSON.stringify(r.lines), r.sub, r.ship, r.total, r.discount, r.d?.code || null).run();
+  await db().prepare("INSERT INTO orders (paypal_order_id,provider,status,email,items_json,subtotal_pence,shipping_pence,total_pence,discount_pence,discount_code,aff_code) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
+    .bind(data.id, "stripe", "created", email || null, JSON.stringify(r.lines), r.sub, r.ship, r.total, r.discount, r.d?.code || null, refFromReq(req)).run();
   return Response.json({ url: data.url });
 }

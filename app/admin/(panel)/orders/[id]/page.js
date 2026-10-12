@@ -8,6 +8,7 @@ export default async function Order({ params }) {
   if (!o) notFound();
   const sup = Object.fromEntries((await db().prepare("SELECT handle,supplier_url FROM products WHERE supplier_url IS NOT NULL AND supplier_url<>''").all()).results.map((r) => [r.handle, r.supplier_url]));
   const a = addr(o.shipping_json);
+  const cm = await db().prepare("SELECT c.*, f.name, f.code FROM commissions c JOIN affiliates f ON f.id=c.affiliate_id WHERE c.order_id=?").bind(o.id).first();
   const block = [o.name, a.line1, a.line2, a.city, a.county, a.postcode, a.country, a.phone && "Phone: " + a.phone].filter(Boolean).join("\n");
   return (
     <>
@@ -33,6 +34,7 @@ export default async function Order({ params }) {
             <button className="b">Save</button></form>
           <form className="card" method="post" action="/api/admin/do"><h2>Internal note</h2><input type="hidden" name="action" value="note" /><input type="hidden" name="id" value={o.id} />
             <textarea name="note" defaultValue={o.note || ""} placeholder="Only you can see this" /><p><button className="b o sm">Save note</button></p></form>
+          {cm && <div className="card"><h2>Affiliate</h2><p><a href={"/admin/affiliates/" + cm.affiliate_id}>{cm.name}</a> ({cm.code}) via {cm.source}<br />Commission {money(cm.amount_pence)} · {cm.status}</p><p className="mut">Setting this order to Cancelled also cancels the commission.</p></div>}
           <div className="card"><h2>Refunds</h2><p className="mut">Issue the refund in your PayPal or Stripe dashboard, then set the status above to Cancelled / refunded.</p></div>
         </div>
       </div>

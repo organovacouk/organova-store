@@ -47,7 +47,7 @@ export default function Root({ children }) {
               </div></div>
             <div><h4>Shop</h4>{nav.map(([l, t]) => <a key={t} href={"/shop?type=" + encodeURIComponent(t)}>{l}</a>)}<a href="/shop?sale=1">Sale</a></div>
             <div><h4>Help</h4><a href="/pages/faq">FAQ</a><a href="/pages/contact">Contact us</a><a href="/account">Your orders</a><a href="/policies/shipping-policy">Shipping</a><a href="/policies/refund-policy">Returns &amp; refunds</a></div>
-            <div><h4>Organova</h4><a href="/pages/about-us">Why Organova</a><a href="/blog">Journal</a><a href="/policies/privacy-policy">Privacy policy</a><a href="/policies/terms-of-service">Terms of service</a><a href="/policies/legal-notice">Legal notice</a></div>
+            <div><h4>Organova</h4><a href="/pages/about-us">Why Organova</a><a href="/blog">Journal</a><a href="/partners">Become a partner</a><a href="/policies/privacy-policy">Privacy policy</a><a href="/policies/terms-of-service">Terms of service</a><a href="/policies/legal-notice">Legal notice</a></div>
           </div>
           <div className="f-bot">
             <span>© {new Date().getFullYear()} Organova. All rights reserved.</span>
