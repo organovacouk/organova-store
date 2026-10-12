@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 const RANGES = [["Under £20", "", "20"], ["£20 – £50", "20", "50"], ["£50 – £100", "50", "100"], ["£100+", "100", ""]];
 export default function ShopToolbar({ count }) {
-  const router = useRouter(); const sp = useSearchParams(); const key = sp.toString();
+  const router = useRouter(); const sp = useSearchParams(); const path = usePathname() || "/shop"; const key = sp.toString();
   const [open, setOpen] = useState(false);
   const read = () => ({ min: sp.get("min") || "", max: sp.get("max") || "", stock: sp.get("stock") === "1", sale: sp.get("sale") === "1" });
   const [f, setF] = useState(read());
@@ -13,7 +13,7 @@ export default function ShopToolbar({ count }) {
     set(); window.addEventListener("resize", set); return () => window.removeEventListener("resize", set);
   }, []);
   useEffect(() => { const k = (e) => e.key === "Escape" && setOpen(false); document.addEventListener("keydown", k); return () => document.removeEventListener("keydown", k); }, []);
-  const go = (patch) => { const q = new URLSearchParams(sp.toString()); for (const [k, v] of Object.entries(patch)) { if (v === "" || v === false || v == null) q.delete(k); else q.set(k, v === true ? "1" : v); } router.push("/shop" + (q.toString() ? "?" + q : "")); };
+  const go = (patch) => { const q = new URLSearchParams(sp.toString()); for (const [k, v] of Object.entries(patch)) { if (v === "" || v === false || v == null) q.delete(k); else q.set(k, v === true ? "1" : v); } router.push(path + (q.toString() ? "?" + q : "")); };
   const chips = [];
   if (f.min || f.max) chips.push(["Price " + (f.min ? "£" + f.min : "£0") + (f.max ? " – £" + f.max : "+"), { min: "", max: "" }]);
   if (f.stock) chips.push(["In stock", { stock: "" }]);

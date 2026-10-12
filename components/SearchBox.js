@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { catUrl } from "@/lib/cats";
 const gbp = (p) => "£" + (p / 100).toFixed(2);
 export default function SearchBox() {
   const [q, setQ] = useState(""), [res, setRes] = useState(null), [open, setOpen] = useState(false);
@@ -16,7 +17,7 @@ export default function SearchBox() {
       <button aria-label="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg></button>
       {open && res && (
         <div className="sugg" role="listbox">
-          {res.cats.map((c) => <a key={c} href={"/shop?type=" + encodeURIComponent(c)} className="sc">Browse <b>{c}</b></a>)}
+          {res.cats.map((c) => <a key={c} href={catUrl(c)} className="sc">Browse <b>{c}</b></a>)}
           {res.products.map((p) => <a key={p.handle} href={"/products/" + p.handle}><img src={p.image} alt="" /><span>{p.title}</span><b>{p.from ? "from " : ""}{gbp(p.price)}</b></a>)}
           {!res.products.length && !res.cats.length && <p>No matches. Try a simpler word.</p>}
           {res.products.length > 0 && <a className="all" href={"/search?q=" + encodeURIComponent(q)}>See all results for “{q}”</a>}
