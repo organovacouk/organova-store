@@ -15,6 +15,9 @@ STORE FACTS:
 - Discount code ORGANOVAFIRST gives 20% off a first order.
 - Support: support@organova.co.uk and orders@organova.co.uk. Replies within 24-48 hours, Monday to Friday. Contact page: /pages/contact. FAQ: /pages/faq.`;
 const plain = (h) => String(h || "").replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim().slice(0, 170);
+// Models are tried in order. Cloudflare retires older models, so we keep a few current fallbacks.
+const FALLBACKS = ["@cf/meta/llama-3.1-8b-instruct-fast", "@cf/meta/llama-3.1-8b-instruct-fp8", "@cf/meta/llama-3.3-70b-instruct-fp8-fast"];
+const logErr = (m) => db().prepare("INSERT INTO settings (key,value) VALUES ('chat:lasterror',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(String(m).slice(0, 400)).run().catch(() => {});
 export async function POST(req) {
   const e = env();
   if (!(e.AI || e.ANTHROPIC_API_KEY) || (await getSetting("chat_enabled", "1")) === "0") return Response.json({ error: "The assistant is not available right now." }, { status: 503 });
@@ -31,15 +34,21 @@ export async function POST(req) {
   const list = found.map((p) => `- [${p.title}](/products/${p.handle}) | £${((p.nv ? p.minp : p.price_pence) / 100).toFixed(2)}${p.nv ? " (from, has options)" : ""}${!p.nv && p.compare_at_pence > p.price_pence ? ` (was £${(p.compare_at_pence / 100).toFixed(2)})` : ""} | ${p.product_type} | ${p.available ? "in stock" : "SOLD OUT"} | ${plain(p.description_html)}`).join("\n");
   const system = SYSTEM + "\nPRODUCT LIST (most relevant to the customer's message; may be empty):\n" + (list || "(none matched)");
   let reply = "";
-  try {
-    if (e.ANTHROPIC_API_KEY) {
+  if (e.ANTHROPIC_API_KEY) {
+    try {
       const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "x-api-key": e.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" }, body: JSON.stringify({ model: e.CHAT_MODEL || "claude-haiku-4-5-20251001", max_tokens: 450, system, messages: msgs }) });
-      const d = await r.json(); reply = d.content?.[0]?.text || "";
-    } else {
-      const r = await e.AI.run(e.CHAT_MODEL || "@cf/meta/llama-3.1-8b-instruct", { messages: [{ role: "system", content: system }, ...msgs], max_tokens: 450 });
-      reply = r.response || "";
+      const d = await r.json(); reply = d.content?.[0]?.text || ""; if (!reply) await logErr("Anthropic: " + JSON.stringify(d).slice(0, 300));
+    } catch (err) { await logErr("Anthropic: " + (err?.message || err)); }
+  } else {
+    for (const model of [...new Set([e.CHAT_MODEL, ...FALLBACKS].filter(Boolean))]) {
+      try {
+        const r = await e.AI.run(model, { messages: [{ role: "system", content: system }, ...msgs], max_tokens: 450 });
+        reply = String(r?.response ?? r?.choices?.[0]?.message?.content ?? "").trim();
+        if (reply) break;
+        await logErr(`${model}: empty reply ${JSON.stringify(r).slice(0, 200)}`);
+      } catch (err) { await logErr(`${model}: ${err?.message || err}`); }
     }
-  } catch { reply = ""; }
+  }
   if (!reply.trim()) return Response.json({ reply: "Sorry, I could not answer that just now. Please try again, or email support@organova.co.uk." });
   reply = reply.trim().slice(0, 1500);
   const hs = [...new Set([...reply.matchAll(/\/products\/([a-z0-9-]+)/g)].map((m) => m[1]))].slice(0, 3);
