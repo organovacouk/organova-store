@@ -4,6 +4,7 @@ Organova operates this store and website, including all related information, con
 Please read this Privacy Policy carefully. By using and accessing any of the Services, you acknowledge that you have read this Privacy Policy and understand the collection, use, and disclosure of your information as described in this Privacy Policy.
 ## Personal Information We Collect or Process
 When we use the term "personal information," we are referring to information that identifies or can reasonably be linked to you or another person. Personal information does not include information that is collected anonymously or that has been de-identified, so that it cannot identify or be reasonably linked to you. We may collect or process the following categories of personal information, depending on how you interact with the Services, where you live, and as permitted or required by applicable law:
+- **Account details** if you create an account, including your email address, name, marketing preference and order history.
 - **Contact details** including your name, shipping address, phone number, and email address.
 - **Payment information** including transaction details, form of payment and payment confirmation. Card and PayPal account details are handled by PayPal and are not stored by us.
 - **Transaction information** including the items you put in your basket or purchase, return or cancel, and your past transactions.
