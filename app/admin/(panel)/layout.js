@@ -12,7 +12,7 @@ export default async function Panel({ children }) {
   const rv = (await d.prepare("SELECT COUNT(*) n FROM reviews WHERE approved=0").first()).n;
   const ms = (await d.prepare("SELECT COUNT(*) n FROM messages WHERE handled=0").first()).n;
   const pa = (await d.prepare("SELECT COUNT(*) n FROM affiliates WHERE status='pending'").first()).n;
-  const items = [["/admin", "Dashboard"], ["/admin/orders", "Orders", todo], ["/admin/products", "Products"], ["/admin/categories", "Categories"], ["/admin/discounts", "Discounts"], ["/admin/customers", "Customers"], ["/admin/affiliates", "Affiliates", pa], ["/admin/reviews", "Reviews", rv], ["/admin/messages", "Messages", ms], ["/admin/journal", "Journal"], ["/admin/settings", "Settings"]];
+  const items = [["/admin", "Dashboard"], ["/admin/orders", "Orders", todo], ["/admin/products", "Products"], ["/admin/dropship", "Dropship"], ["/admin/categories", "Categories"], ["/admin/discounts", "Discounts"], ["/admin/customers", "Customers"], ["/admin/affiliates", "Affiliates", pa], ["/admin/reviews", "Reviews", rv], ["/admin/messages", "Messages", ms], ["/admin/journal", "Journal"], ["/admin/settings", "Settings"]];
   return (
     <div className="adm">
       <aside className="side"><a href="/admin" className="brand"><img src="/logo.svg" alt="Organova" /></a><Nav items={items} /><div className="sp" /><a href="/" target="_blank">View store ↗</a>
