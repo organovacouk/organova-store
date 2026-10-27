@@ -12,7 +12,7 @@ export async function POST(req) {
   }
   const origin = new URL(req.url).origin;
   const params = {
-    mode: "payment", success_url: origin + "/thanks", cancel_url: origin + "/cart", currency: "gbp",
+    mode: "payment", success_url: origin + "/thanks?session_id={CHECKOUT_SESSION_ID}", cancel_url: origin + "/cart", currency: "gbp",
     customer_email: email || undefined,
     shipping_address_collection: { allowed_countries: ["GB"] }, phone_number_collection: { enabled: true },
     line_items: r.lines.map((l) => ({ quantity: l.qty, price_data: { currency: "gbp", unit_amount: l.price_pence, product_data: { name: l.title.slice(0, 120) } } })),
