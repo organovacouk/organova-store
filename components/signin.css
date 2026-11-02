@@ -1,0 +1,2 @@
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#fff;color:#1e2022;border:1px solid #c9cdc4}.gbtn:hover{background:#f4f5f2}
+.or{text-align:center;margin:14px 0;position:relative;opacity:.7}.or:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px solid var(--line)}.or span{position:relative;background:var(--bg);padding:0 12px}
